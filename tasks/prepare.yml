@@ -7,6 +7,13 @@
         - 'prepare-{{ ansible_distribution }}.yml'
   loop: "{{ q('first_found', params, errors='ignore') }}"
 
+- name: Ensure required repos are available
+  ansible.builtin.dnf:
+    enablerepo:
+      - rhel-7-server-rpms
+      - rhel-7-server-extras-rpms
+  when: 'leapp_yum_version_locked | default() | bool'
+
 - name: Clear yum versionlocks
   command: yum versionlock clear
   args:
